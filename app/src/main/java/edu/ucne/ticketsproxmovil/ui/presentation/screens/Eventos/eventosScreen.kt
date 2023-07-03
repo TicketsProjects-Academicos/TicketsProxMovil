@@ -12,25 +12,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import edu.ucne.ticketsproxmovil.data.remote.dto.EventoDTO
-import coil.size.Scale
 import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun EventList(event: List<EventoDTO>) {
+fun EventList(event: List<EventoDTO>, idEventos: (Int) -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-//        color = MaterialTheme.colors.background
     ) {
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -39,7 +31,7 @@ fun EventList(event: List<EventoDTO>) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(it),
-//                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(16.dp)
             ) {
@@ -47,7 +39,7 @@ fun EventList(event: List<EventoDTO>) {
                     Box(modifier = Modifier
                         .fillMaxWidth(0.90f)
                         .padding(16.dp)){
-                        EventItem(event, Modifier = Modifier)
+                        EventItem(event, Modifier = Modifier, idEventos)
 
                     }
 
@@ -59,7 +51,7 @@ fun EventList(event: List<EventoDTO>) {
 }
 
 @Composable
-fun EventItem(event: EventoDTO, Modifier: Modifier) {
+fun EventItem(event: EventoDTO, Modifier: Modifier, idEventos: (Int) -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
         shape = RoundedCornerShape(15.dp),
@@ -88,15 +80,32 @@ fun EventItem(event: EventoDTO, Modifier: Modifier) {
                 )
 
                 Button(
-                    onClick = { /* Acción al hacer clic en el botón */ },
+                    onClick = { idEventos(event.idEventos) },
                     modifier = Modifier.align(Alignment.End)
                 ) {
-                    Text(text = "Comprar tickets")
+                    Text(text = "Comprar tickets ${event.idEventos}")
                 }
             }
         }
     }
 }
+
+
+
+
+
+@Composable
+fun PreviewEventList(
+    idEventos: (Int) -> Unit,
+    viewModel: EventoViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    EventList(event = uiState.evento, idEventos)
+}
+
+
+
 
 
 //@Composable
@@ -141,7 +150,7 @@ fun EventItem(event: EventoDTO, Modifier: Modifier) {
 //
 //    }
 //}
-    //            Column {
+//            Column {
 //                            Text(text = event.nombreEvento, style = TextStyle(color = Color.White, fontSize = 16.sp))
 //            Text(text = event.descripcion, style = MaterialTheme.typography.body2)
 //            Button(onClick = {  }) {
@@ -186,14 +195,4 @@ fun EventItem(event: EventoDTO, Modifier: Modifier) {
 //            }
 //        }
 //    }
-
-
-@Composable
-fun PreviewEventList(
-    viewModel: EventoViewModel = hiltViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsState()
-
-    EventList(event = uiState.evento)
-}
 

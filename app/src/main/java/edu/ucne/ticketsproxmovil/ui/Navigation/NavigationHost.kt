@@ -8,11 +8,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 
 import  edu.ucne.ticketsproxmovil.ui.Navigation.Destinations.*
-import  edu.ucne.ticketsproxmovil.ui.presentation.Pantalla1
-import  edu.ucne.ticketsproxmovil.ui.presentation.Pantalla2
-import  edu.ucne.ticketsproxmovil.ui.presentation.Pantalla3
 import  edu.ucne.ticketsproxmovil.ui.presentation.screens.Eventos.PreviewEventList
 import  edu.ucne.ticketsproxmovil.ui.presentation.screens.home.HomeScreen
+import  edu.ucne.ticketsproxmovil.ui.presentation.screens.Compra.TicketPurchaseScreen
+import  edu.ucne.ticketsproxmovil.ui.presentation.screens.Asientos.AsientoScreen
+import edu.ucne.ticketsproxmovil.ui.presentation.screens.Login.LoginScreen
 
 
 @Composable
@@ -22,34 +22,44 @@ fun NavigationHost(
 ) {
     NavHost(navController = navController, startDestination = HomeScreen.route) {
 
-        composable(Pantalla1.route) {
-            Pantalla1(
-                navegarPantalla2 = { newText ->
-                    navController.navigate(Pantalla2.createRoute(newText))
-                }
-            )
-        }
-
         composable(HomeScreen.route) {
           HomeScreen()
         }
         composable(EventScreen.route) {
-            PreviewEventList()
+            PreviewEventList(
+                idEventos = {idEventos ->
+                    navController.navigate(TicketPurchaseScreen.createRouteCompra(idEventos))
+
+                }
+            )
         }
-
-
 
         composable(
-            Pantalla2.route,
-            arguments = listOf(navArgument("newText"){ defaultValue = "Pantalla 2" })
-        ) { navBackStackEntry ->
-            var newText = navBackStackEntry.arguments?.getString("newText")
-            requireNotNull(newText)
-            Pantalla2(newText, darkMode)
+            TicketPurchaseScreen.route,
+            arguments = listOf(navArgument("idEventos"){defaultValue = "Comprar Tickets"})
+        ) {navBackStackEntry ->
+            var idEventos = navBackStackEntry.arguments?.getString("idEventos")
+            requireNotNull(idEventos)
+            TicketPurchaseScreen(
+                idEventos,
+                idSeccion = {idSeccion ->
+                    navController.navigate(AsientoScreen.createRouteAsiento(idSeccion))},
+                        navController = navController
+            )
+
         }
 
-        composable(Pantalla3.route) {
-            Pantalla3()
+        composable(
+            AsientoScreen.route,
+            arguments = listOf(navArgument("idSeccion"){defaultValue= "asientos "})
+        ){ NavBackStackEntry ->
+            var idSeccion = NavBackStackEntry.arguments?.getString("idSeccion")
+            requireNotNull(idSeccion)
+            AsientoScreen(idSeccion)
         }
+
+
+
     }
 }
+

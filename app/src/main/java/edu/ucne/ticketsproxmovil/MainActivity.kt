@@ -3,13 +3,10 @@ package edu.ucne.ticketsproxmovil
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import  edu.ucne.ticketsproxmovil.ui.presentation.MainScreen
 import  edu.ucne.ticketsproxmovil.ui.Navigation.Destinations
 import  edu.ucne.ticketsproxmovil.ui.presentation.components.Drawer
 import com.dev.leonardom.introuduccionajetpackcompose.presentation.components.TopBar
@@ -21,7 +18,9 @@ import edu.ucne.ticketsproxmovil.ui.theme.TicketsProxMovilTheme
 
 import  edu.ucne.ticketsproxmovil.ui.theme.BLUE800
 
-import  edu.ucne.ticketsproxmovil.ui.Navigation.PreviewNavigationScreen
+import edu.ucne.ticketsproxmovil.ui.presentation.screens.Login.LoginScreen
+import edu.ucne.ticketsproxmovil.ui.presentation.screens.Login.LoginViewModel
+import edu.ucne.ticketsproxmovil.ui.presentation.screens.home.HomeScreen
 import kotlinx.coroutines.launch
 
 
@@ -49,9 +48,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(
-    darkMode: MutableState<Boolean>
-) {
+fun TicketsProxNav(darkMode: MutableState<Boolean>) {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState(
         drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -60,11 +57,8 @@ fun MainScreen(
     val openDialog = remember { mutableStateOf(false) }
 
     val navigationItems = listOf(
-        Destinations.Pantalla1,
-        Destinations.Pantalla2,
-        Destinations.Pantalla3,
         Destinations.HomeScreen,
-        Destinations.EventScreen
+        Destinations.EventScreen,
     )
 
     Scaffold(
@@ -86,6 +80,45 @@ fun MainScreen(
     ){
         NavigationHost(navController, darkMode)
     }
-
-//    Dialog(showDialog = openDialog.value, dismissDialog = { openDialog.value = false })
 }
+
+@Composable
+fun MainScreen(
+    darkMode: MutableState<Boolean>,
+    viwModel: LoginViewModel = hiltViewModel()
+
+) {
+    val loginResult by viwModel.loginResult.collectAsState()
+
+    LaunchedEffect(loginResult) {
+        loginResult?.let { result ->
+            handleLoginResult(result.succes, result.message, result.nombre)
+        }
+    }
+
+    Scaffold {
+        if (loginResult?.succes == true) {
+            TicketsProxNav(darkMode)
+        } else {
+            LoginScreen(onLoginResult = ::handleLoginResult)
+        }
+    }
+
+
+
+}
+
+fun handleLoginResult(success: Boolean, message: String, nombre: String) {
+    if (success) {
+        println("MainActivity")
+        println("Sesión iniciada correctamente: $success")
+        println("Message: $message")
+        println("Nombre: $nombre")
+
+
+    } else {
+        println("Sesión fallida, credenciales incorrectas")
+    }
+}
+
+

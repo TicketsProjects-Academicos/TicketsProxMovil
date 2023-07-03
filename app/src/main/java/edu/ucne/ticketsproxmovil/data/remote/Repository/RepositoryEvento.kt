@@ -1,7 +1,5 @@
-package edu.ucne.ticketsproxmovil.data.remote.repositoryEvento
+package edu.ucne.ticketsproxmovil.data.remote.Repository
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import  edu.ucne.ticketsproxmovil.data.remote.ApiTickets
 import  edu.ucne.ticketsproxmovil.data.remote.dto.EventoDTO

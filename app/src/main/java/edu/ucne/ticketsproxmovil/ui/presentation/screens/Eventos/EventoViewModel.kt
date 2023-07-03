@@ -1,6 +1,5 @@
 package edu.ucne.ticketsproxmovil.ui.presentation.screens.Eventos
 
-import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -8,7 +7,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import edu.ucne.ticketsproxmovil.data.remote.dto.EventoDTO
-import  edu.ucne.ticketsproxmovil.data.remote.repositoryEvento.RepositoryEvento
+import  edu.ucne.ticketsproxmovil.data.remote.Repository.RepositoryEvento
 
 data class EventoViewModelUiState(
     val evento: List<EventoDTO> = emptyList()
@@ -17,6 +16,7 @@ data class EventoViewModelUiState(
 class EventoViewModel @Inject constructor(
     private val repEvento: RepositoryEvento
 ): ViewModel() {
+
     private val _uiState = MutableStateFlow(EventoViewModelUiState())
     val uiState: StateFlow<EventoViewModelUiState> = _uiState.asStateFlow()
 

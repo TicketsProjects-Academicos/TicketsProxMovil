@@ -5,7 +5,12 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Album
+import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material.icons.filled.Chair
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.AirlineSeatFlat
 import androidx.compose.ui.graphics.vector.ImageVector
+import edu.ucne.ticketsproxmovil.data.remote.dto.EventoDTO
 
 sealed class Destinations(
     val route: String,
@@ -14,9 +19,18 @@ sealed class Destinations(
 ) {
     object EventScreen: Destinations("PreviewEventList", "Evento", Icons.Filled.Album)
     object  HomeScreen: Destinations("HomeScreen", "Home", Icons.Filled.Home)
-    object Pantalla1: Destinations("pantalla1", "Pantalla 1", Icons.Filled.Home)
-    object Pantalla2: Destinations("pantalla2/?newText={newText}", "Pantalla 2", Icons.Filled.Settings) {
-        fun createRoute(newText: String) = "pantalla2/?newText=$newText"
+    object  TicketPurchaseScreen: Destinations("TicketPurchaseScreen/?idEventos={idEventos}", "Tickets", Icons.Filled.AddBox){
+        fun createRouteCompra(idEventos: Int) = "TicketPurchaseScreen/?idEventos=$idEventos"
     }
-    object Pantalla3: Destinations("pantalla3", "Pantalla 3", Icons.Filled.Favorite)
+    object AsientoScreen: Destinations("AsientoScreen/?idSeccion={idSeccion}", "Asientos", Icons.Filled.Chair){
+        fun  createRouteAsiento(idSeccion: Int) = "AsientoScreen/?idSeccion=$idSeccion"
+    }
+    object ReservadoScreen: Destinations("ReservadoScreen", "Reservado", Icons.Filled.AirlineSeatFlat)
+
+    object LoginScreen: Destinations("LoginScreen", "Login", Icons.Filled.Person)
+
+
+
+
+
 }
